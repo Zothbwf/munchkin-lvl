@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Munchkin level counter{% endblock title %}
+{% block header %}Munchkin{% endblock header %}
+{% block  content %}
+{% for player in players %}
+<div class="player-card-minimal">
+    <div class="player-header">
+        <p><b>👤 {{ player.player_name }}</b></p>
+        <form action="{% url 'game:delete_player' game_hash player.id %}" method="post" class="action-form">
+            {% csrf_token %}
+            <button type="submit" class="action-btn delete-btn" title="Удалить игрока">🗑️</button>
+        </form>
+    </div>
+    
+    <div class="player-level">
+        <form action="{% url 'game:decrease_lvl' game_hash player.id %}" method="post" class="action-form">
+            {% csrf_token %}
+            <button type="submit" class="action-btn lvl-btn" title="Уменьшить уровень">➖</button>
+        </form>
+        <span class="stat-value">LVL {{ player.player_lvl }}</span>
+        <form action="{% url 'game:increase_lvl' game_hash player.id %}" method="post" class="action-form">
+            {% csrf_token %}
+            <button type="submit" class="action-btn lvl-btn" title="Увеличить уровень">➕</button>
+        </form>
+    </div>
+    
+    <div class="player-equipment">
+        <form action="{% url 'game:decrease_equipment' game_hash player.id %}" method="post" class="action-form">
+            {% csrf_token %}
+            <button type="submit" class="action-btn equip-btn" title="Уменьшить снаряжение">➖</button>
+        </form>
+        <span class="stat-value">🎒 {{ player.player_equipment }}</span>
+        <form action="{% url 'game:increase_equipment' game_hash player.id %}" method="post" class="action-form">
+            {% csrf_token %}
+            <button type="submit" class="action-btn equip-btn" title="Увеличить снаряжение">➕</button>
+        </form>
+    </div>
+</div>
+{% endfor %}
+    <form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Добавить">
+</form>
+{% endblock content %}

@@ -1,0 +1,24 @@
+from django.db import models
+
+# Create your models here.
+
+
+class Game(models.Model):
+    game_hash = models.CharField(max_length=6)
+
+    def __str__(self):
+        return f'Game code = {self.game_hash}'
+
+
+class Player(models.Model):
+    player_name = models.CharField(max_length=20)
+    player_lvl = models.IntegerField(default=1)
+    player_equipment = models.IntegerField(default=0)
+    player_game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    player_hash = models.CharField(max_length=20)
+
+    class Meta():
+        indexes = [models.Index(fields=['player_hash'])]
+
+    def __str__(self):
+        return self.player_name
