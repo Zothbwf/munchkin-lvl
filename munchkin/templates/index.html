@@ -1,10 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Munchkin level counter{% endblock title %}
 {% block header %}Munchkin{% endblock header %}
-{% block  content %}
+{% block content %}
 
-<div><a class = "button-style" href = "{%url 'game:create_game'%}">Создать игру</a></div>
-<br>
-<div><a class = "button-style" href = "">Зайти в игру</a></div>
+<div class="form-container">
+    <form action="{% url 'game:create_game'%}" method="get" class="action-form single-button">
+        {% csrf_token %}          
+        <button type="submit" class="action-btb button-style">Создать игру</button>
+    </form>
+
+    <form action="{% url 'game:join_game_0'%}" method="get" class="action-form">
+        {% csrf_token %}
+        <input name="game_hash" placeholder="Введите код игры">
+        <button type="submit" class="action-btb button-style">Зайти в игру</button>
+    </form>
+</div>
 
 {% endblock content %}

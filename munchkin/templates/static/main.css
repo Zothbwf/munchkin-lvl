@@ -1,85 +1,560 @@
-body {
-  background-color: lightblue;
+/* main.css - Исходная версия */
+:root {
+  --primary: #bb86fc;
+  --primary-dark: #3700b3;
+  --secondary: #03dac6;
+  --danger: #cf6679;
+  --bg-dark: #121212;
+  --card-bg: #1e1e1e;
+  --text: #e1e1e1;
+  --border: #333;
 }
-.button-style {
-  display: inline-block;
-  padding: 10px 15px;
-  background: #f2f2f2;
-  border: 1px solid #000; /* В ожидании набирающего популярность темного режима, рамка черного цвета */
-  color: #333;
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  margin: 0;
+  padding: 20px;
+}
+
+.players-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.player-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 12px;
+  border-left: 3px solid var(--secondary);
+}
+
+.player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.player-name {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.stat-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.1);
+}
+
+.lvl-btn { color: var(--primary); }
+.equip-btn { color: var(--secondary); }
+.delete-btn { color: var(--danger); }
+
+/* ФОРМА ДОБАВЛЕНИЯ (исправленная версия) */
+.add-player-form {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 15px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+}
+
+.add-player-form input[type="text"] {
+  flex: 1;
+  padding: 12px 15px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.add-player-form input[type="submit"] {
+  padding: 12px 24px;
+  background: var(--primary);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  font-size: 15px;
+}
+
+.add-player-form input[type="submit"]:hover {
+  background: var(--primary-dark);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .players-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .players-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .add-player-form {
+    flex-direction: column;
+  }
+  
+  .add-player-form input[type="text"],
+  .add-player-form input[type="submit"] {
+    width: 100%;
+  }
+}
+.add-player-form {
+  max-width: 1200px;
+  margin: 20px auto;
+  display: flex;
+  gap: 10px;
+}
+
+.add-player-form input {
+  height: 50px
+  box-sizing: border-box;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.add-player-form input[type="text"] {
+  flex: 1;
+  padding: 0 15px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.add-player-form input[type="submit"] {
+  width: 150px;
+  background: var(--primary);
+  color: #000;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* Важно: убираем стандартные отступы */
+}
+
+.add-player-form input[type="submit"]:hover {
+  background: var(--primary-dark);
+  color: #fff;
+}
+
+/* Адаптив */
+@media (max-width: 600px) {
+  .add-player-form {
+    flex-direction: column;
+  }
+  .add-player-form input {
+    width: 100% !important;
+  }
+}
+/* Обновленные стили формы */
+.add-player-form {
+  max-width: 600px; /* Увеличили ширину формы */
+  margin: 20px auto;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 8px;
+}
+
+.form-row {
+  margin-bottom: 15px;
+}
+
+.form-row label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Поле ввода имени с ограничением ширины */
+.form-row input[type="text"] {
+  width: 300px; /* Фиксированная ширина */
+  max-width: 100%; /* Для адаптива */
+  padding: 8px 12px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 14px;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+/* Круглые радиокнопки */
+.gender-options {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.gender-option {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.gender-option input[type="radio"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+
+.gender-option input[type="radio"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.gender-option label {
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+}
+
+/* Кнопка добавления с ограничением ширины */
+.add-player-btn {
+  width: 300px; /* Фиксированная ширина */
+  max-width: 100%; /* Для адаптива */
+  padding: 10px;
+  background: var(--primary);
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+  height: 50px;
+  display: block; /* Чтобы кнопка была на новой строке */
+}
+
+.add-player-btn:hover {
+  background: var(--primary-dark);
+  color: #fff;
+}
+
+/* Адаптив */
+@media (max-width: 650px) {
+  .add-player-form {
+    padding: 15px;
+  }
+  
+  .form-row input[type="text"],
+  .add-player-btn {
+    width: 100%; /* На маленьких экранах растягиваем на всю ширину */
+  }
+  
+  .gender-options {
+    flex-wrap: wrap;
+  }
+}
+
+
+
+/* Добавим в основной CSS */
+.gender-btn {
+  color: var(--secondary);
+  margin-left: 8px;
+  font-size: 12px;
+  width: auto;
+  padding: 0 8px;
+  border-radius: 12px;
+  height: 24px;
+  line-height: 24px;
+}
+
+/* Обновим стиль для кнопок, чтобы они были более консистентными */
+.btn {
+  min-width: 26px;
+  height: 26px;
+  border-radius: 13px;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* Для кнопки удаления сделаем шрифт крупнее */
+.delete-btn {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Добавим новые стили */
+.name-gender-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-name {
+  font-weight: bold;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+.gender-btn {
+  color: var(--secondary);
+  font-size: 12px;
+  width: auto;
+  padding: 0 8px;
+  border-radius: 12px;
+  height: 24px;
+  min-width: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.end-game-btn {
+  display: block;
+  max-width: 200px;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
   text-decoration: none;
+  font-size: 15px;
+}
+
+.end-game-btn:hover {
+  background-color: #b00020; /* Более темный оттенок красного */
+  transform: translateY(-1px);
+}
+
+.end-game-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.end-game-btn {
+  padding: 8px 16px;
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.end-game-btn:hover {
+  background-color: #b00020;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+
+.confirmation-dialog {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 25px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
-.button-style:hover, .button-style:focus {
-  background: #e2e2f2; /* Эффект при наведении — дополнительное оформление */
+.confirmation-dialog h3 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: var(--text);
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.confirm-btn, .cancel-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 15px;
+  min-width: 160px;
+}
+
+.confirm-btn {
+  background-color: var(--danger);
+  color: white;
+}
+
+.cancel-btn {
+  background-color: var(--secondary);
+  color: #000;
+}
+
+.confirm-btn:hover {
+  background-color: #b00020;
+  transform: translateY(-1px);
+}
+
+.cancel-btn:hover {
+  background-color: #00b4a0;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .confirmation-buttons {
+    flex-direction: column;
+  }
+  
+  .confirm-btn, .cancel-btn {
+    width: 100%;
+  }
 }
 
 
-    .player-card-minimal {
-        background: #f8f9fa;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 15px;
-        font-family: 'Segoe UI', Arial, sans-serif;
-        max-width: 220px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
 
-    .player-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
+/* Основные стили (сохранение предыдущего стиля) */
+.button-style {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--primary);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  font-size: 15px;
+  margin: 5px 0;
+}
 
-    .player-level, .player-equipment {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        margin: 10px 0;
-    }
+.button-style:hover {
+  background: var(--primary-dark);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-    .stat-value {
-        min-width: 50px;
-        text-align: center;
-    }
+.action-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  max-width: 500px;
+  margin: 20px auto; /* Центрирование формы */
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
-    .action-form {
-        margin: 0;
-    }
+.action-form input {
+  flex: 1;
+  padding: 12px 15px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+  height: 44px;
+  box-sizing: border-box;
+}
 
-    .action-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 1em;
-        padding: 2px 8px;
-        border-radius: 4px;
-        transition: all 0.2s;
-    }
+.action-btb {
+  white-space: nowrap;
+}
 
-    .delete-btn {
-        color: #dc3545;
-    }
+/* Новые стили для центрирования и красивого расположения */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px); /* Учитываем высоту header/footer */
+  padding: 20px;
+}
 
-    .delete-btn:hover {
-        background: rgba(220, 53, 69, 0.1);
-    }
+/* Стиль для формы без input (только кнопка) */
+.action-form.single-button {
+  justify-content: center;
+}
 
-    .lvl-btn {
-        color: #007bff;
-    }
+.action-form.single-button button {
+  width: 100%;
+  max-width: 300px;
+}
 
-    .lvl-btn:hover {
-        background: rgba(0, 123, 255, 0.1);
-    }
-
-    .equip-btn {
-        color: #28a745;
-    }
-
-    .equip-btn:hover {
-        background: rgba(40, 167, 69, 0.1);
-    }
+/* Адаптивность */
+@media (max-width: 600px) {
+  .action-form {
+    flex-direction: column;
+    width: 100%;
+    padding: 15px;
+  }
+  
+  .action-form input,
+  .action-btb {
+    width: 100%;
+  }
+}

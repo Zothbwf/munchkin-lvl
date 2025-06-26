@@ -1,45 +1,81 @@
 {% extends "base.html" %}
 {% block title %}Munchkin level counter{% endblock title %}
-{% block header %}Munchkin{% endblock header %}
-{% block  content %}
-{% for player in players %}
-<div class="player-card-minimal">
-    <div class="player-header">
-        <p><b>👤 {{ player.player_name }}</b></p>
-        <form action="{% url 'game:delete_player' game_hash player.id %}" method="post" class="action-form">
-            {% csrf_token %}
-            <button type="submit" class="action-btn delete-btn" title="Удалить игрока">🗑️</button>
-        </form>
-    </div>
-    
-    <div class="player-level">
-        <form action="{% url 'game:decrease_lvl' game_hash player.id %}" method="post" class="action-form">
-            {% csrf_token %}
-            <button type="submit" class="action-btn lvl-btn" title="Уменьшить уровень">➖</button>
-        </form>
-        <span class="stat-value">LVL {{ player.player_lvl }}</span>
-        <form action="{% url 'game:increase_lvl' game_hash player.id %}" method="post" class="action-form">
-            {% csrf_token %}
-            <button type="submit" class="action-btn lvl-btn" title="Увеличить уровень">➕</button>
-        </form>
-    </div>
-    
-    <div class="player-equipment">
-        <form action="{% url 'game:decrease_equipment' game_hash player.id %}" method="post" class="action-form">
-            {% csrf_token %}
-            <button type="submit" class="action-btn equip-btn" title="Уменьшить снаряжение">➖</button>
-        </form>
-        <span class="stat-value">🎒 {{ player.player_equipment }}</span>
-        <form action="{% url 'game:increase_equipment' game_hash player.id %}" method="post" class="action-form">
-            {% csrf_token %}
-            <button type="submit" class="action-btn equip-btn" title="Увеличить снаряжение">➕</button>
-        </form>
-    </div>
-</div>
-{% endfor %}
-    <form action="" method="post">
+{% block header %}Munchkin Игра: {{game_hash}}{% endblock header %}
+{% block content %}
+<div class="end-game-container">
+  <form method="get" action="{% url "game:remove_game" game_hash=game_hash %}">
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Добавить">
+    <button type="submit" class="end-game-btn">Закончить игру</button>
+  </form>
+</div>
+<div class="players-container">
+  {% for player in players %}
+  <div class="player-card">
+   <div class="player-header">
+  <div class="name-gender-wrapper">
+    <span class="player-name">{{ player.player_name }}<span style='padding-left:8px;'> </span>Сила: {{player.power}}</span>
+    <form method="post" action="{% url 'game:switch_gender' game_hash player.id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn gender-btn">{{player.gender}}</button>
+    </form>
+  </div>
+  <form method="post" action="{% url 'game:delete_player' game_hash player.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn delete-btn" title="Удалить">×</button>
+  </form>
+</div>
+    
+    <div class="stats-row">
+      <div class="stat-group">
+        <form method="post" action="{% url 'game:decrease_lvl' game_hash player.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn lvl-btn">-</button>
+        </form>
+        <span>Уровень: {{ player.player_lvl }}</span>
+        <form method="post" action="{% url 'game:increase_lvl' game_hash player.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn lvl-btn">+</button>
+        </form>
+      </div>
+      
+      <div class="stat-group">
+        <form method="post" action="{% url 'game:decrease_equipment' game_hash player.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn equip-btn">-</button>
+        </form>
+        <span>Шмотки: {{ player.player_equipment }}</span>
+        <form method="post" action="{% url 'game:increase_equipment' game_hash player.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn equip-btn">+</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<form method="post" class="add-player-form">
+  {% csrf_token %}
+  
+  <div class="form-row">
+    <label for="{{ form.player_name.id_for_label }}">Имя игрока</label>
+    {{ form.player_name }}
+  </div>
+  
+  <div class="form-row">
+    <div class="gender-row">
+      <label>Пол:</label>
+      <div class="gender-options">
+        {% for choice in form.player_gender %}
+          <div class="gender-option">
+            {{ choice.tag }}
+            <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <button type="submit" class="add-player-btn">Добавить игрока</button>
 </form>
-{% endblock content %}
+{% endblock %}
