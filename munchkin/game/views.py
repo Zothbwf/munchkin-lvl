@@ -26,8 +26,6 @@ def join_game(request, game_hash):
             return redirect('game:index')
         players = game.player_set.all()
         players = players.order_by('creation_time')
-        for i in players:
-            print(i.creation_time)
         form = PlayerForm()
         context['players'] = players
         context['game_hash'] = game_hash
