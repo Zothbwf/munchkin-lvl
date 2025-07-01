@@ -3,50 +3,51 @@
 {% block header %}Munchkin Игра: {{game_hash}}{% endblock header %}
 {% block content %}
 <div class="end-game-container">
-  <form method="get" action="{% url "game:remove_game" game_hash=game_hash %}">
-    {% csrf_token %}
-    <button type="submit" class="end-game-btn">Закончить игру</button>
-  </form>
+    <button 
+    class="end-game-btn"
+    hx-post="{% url "game:remove_game" game_hash=game_hash %}" 
+        hx-trigger='confirmed'
+        hx-target='body'
+        hx-swap="outerHTML"
+        onClick="Swal.fire({
+  title: 'Вы уверены?',
+  text: 'Игру не получиться восстановить!',
+  icon: 'warning',
+  showCancelButton: true,
+  cancelButtonColor: '#3085d6',
+  confirmButtonColor: '#d33',
+  cancelButtonText: 'Нет',
+  confirmButtonText: 'Да, закончить'
+}).then((result) =>{
+            if(result.isConfirmed){
+              htmx.trigger(this, 'confirmed');  
+            } 
+        })">
+Закончить игру
+</button>
 </div>
-<div class="players-container">
+<div class="players-container" hx-trigger="every 100s" hx-get="{%url 'game:load_players' game_hash%}" hx-swap="outerHTML" id="plr_container">
   {% for player in players %}
-  <div class="player-card">
+<div class="player-card" id = "plr{{player.id}}">
    <div class="player-header">
   <div class="name-gender-wrapper">
     <span class="player-name">{{ player.player_name }}<span style='padding-left:8px;'> </span>Сила: {{player.power}}</span>
-    <form method="post" action="{% url 'game:switch_gender' game_hash player.id %}">
-      {% csrf_token %}
-      <button type="submit" class="btn gender-btn">{{player.gender}}</button>
-    </form>
+      <button hx-swap="outerHTML" hx-post="{% url 'game:switch_gender' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}" class="btn gender-btn">{{player.gender}}</button>
   </div>
-  <form method="post" action="{% url 'game:delete_player' game_hash player.id %}">
-    {% csrf_token %}
-    <button type="submit" class="btn delete-btn" title="Удалить">×</button>
-  </form>
+    <button hx-swap="outerHTML" hx-post="{% url 'game:delete_player' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}" class="btn delete-btn" title="Удалить">×</button>
 </div>
     
     <div class="stats-row">
       <div class="stat-group">
-        <form method="post" action="{% url 'game:decrease_lvl' game_hash player.id %}">
-          {% csrf_token %}
-          <button type="submit" class="btn lvl-btn">-</button>
-        </form>
+          <button hx-swap="outerHTML" hx-post="{% url 'game:decrease_lvl' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}"class="btn lvl-btn">-</button>
         <span>Уровень: {{ player.player_lvl }}</span>
-        <form method="post" action="{% url 'game:increase_lvl' game_hash player.id %}">
-          {% csrf_token %}
-          <button type="submit" class="btn lvl-btn">+</button>
-        </form>
+          <button hx-swap="outerHTML" hx-post="{% url 'game:increase_lvl' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}"class="btn lvl-btn">+</button>
       </div>
       
       <div class="stat-group">
-        <form method="post" action="{% url 'game:decrease_equipment' game_hash player.id %}">
-          {% csrf_token %}
-          <button type="submit" class="btn equip-btn">-</button>
-        </form>
+          <button hx-swap="outerHTML" hx-post="{% url 'game:decrease_equipment' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}" class="btn equip-btn">-</button>
         <span>Шмотки: {{ player.player_equipment }}</span>
-        <form method="post" action="{% url 'game:increase_equipment' game_hash player.id %}">
-          {% csrf_token %}
-          <button type="submit" class="btn equip-btn">+</button>
+          <button hx-swap="outerHTML" hx-post="{% url 'game:increase_equipment' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}" class="btn equip-btn">+</button>
         </form>
       </div>
     </div>
@@ -54,9 +55,7 @@
   {% endfor %}
 </div>
 
-<form method="post" class="add-player-form">
-  {% csrf_token %}
-  
+<form hx-post="{%url 'game:add_player' game_hash %}" hx-target="#plr_container"  hx-trigger="reset" hx-swap="outerHTML" class="add-player-form">  
   <div class="form-row">
     <label for="{{ form.player_name.id_for_label }}">Имя игрока</label>
     {{ form.player_name }}
@@ -76,6 +75,6 @@
     </div>
   </div>
   
-  <button type="submit" class="add-player-btn">Добавить игрока</button>
+  <button type="reset" class="add-player-btn" id="submit_add">Добавить игрока</button>
 </form>
 {% endblock %}

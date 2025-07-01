@@ -4,12 +4,12 @@
 {% block content %}
 
 <div class="form-container">
-    <form action="{% url 'game:create_game'%}" method="get" class="action-form single-button">
+    <form hx-get="{% url 'game:create_game'%}" hx-target="body" hx-swap="outerHTML" class="action-form single-button">
         {% csrf_token %}          
         <button type="submit" class="action-btb button-style">Создать игру</button>
     </form>
 
-    <form action="{% url 'game:join_game_0'%}" method="get" class="action-form">
+    <form hx-get="{% url 'game:join_game_0'%}" hx-target="body" hx-swap="outerHTML" class="action-form">
         {% csrf_token %}
         <input name="game_hash" placeholder="Введите код игры">
         <button type="submit" class="action-btb button-style">Зайти в игру</button>
