@@ -1,0 +1,24 @@
+<div class="player-card" id = "plr{{player.id}}">
+   <div class="player-header">
+  <div class="name-gender-wrapper">
+    <span class="player-name">{{ player.player_name }}<span style='padding-left:8px;'> </span>Сила: {{player.power}}</span>
+      <button hx-swap="outerHTML" hx-post="{% url 'game:switch_gender' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}" class="btn gender-btn">{{player.gender}}</button>
+  </div>
+    <button hx-swap="outerHTML" hx-post="{% url 'game:delete_player' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}" class="btn delete-btn" title="Удалить">×</button>
+</div>
+    
+    <div class="stats-row">
+      <div class="stat-group">
+          <button hx-swap="outerHTML" hx-post="{% url 'game:decrease_lvl' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}"class="btn lvl-btn">-</button>
+        <span>Уровень: {{ player.player_lvl }}</span>
+          <button hx-swap="outerHTML" hx-post="{% url 'game:increase_lvl' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}"class="btn lvl-btn">+</button>
+      </div>
+      
+      <div class="stat-group">
+          <button hx-swap="outerHTML" hx-post="{% url 'game:decrease_equipment' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}" class="btn equip-btn">-</button>
+        <span>Шмотки: {{ player.player_equipment }}</span>
+          <button hx-swap="outerHTML" hx-post="{% url 'game:increase_equipment' game_hash player.id %}" hx-target="#plr{{player.id}}" hx-select="#plr{{player.id}}" class="btn equip-btn">+</button>
+        </form>
+      </div>
+    </div>
+  </div>
