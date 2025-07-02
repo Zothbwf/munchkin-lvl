@@ -4,6 +4,34 @@ from .models import Game, Player
 from uuid import uuid4
 from .forms import PlayerForm
 
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
+
+@receiver(post_save, sender=Game)
+def game_receiver(sender, instance, created, **kwargs):
+    game_hash = str(instance.game_hash)
+    if not game_hash:
+        return
+    async_to_sync(get_channel_layer().group_send)(
+        game_hash,
+        {"type": "game.update"}
+    )
+
+
+@receiver(post_delete, sender=Game)
+def game_receiver(sender, instance, **kwargs):
+    game_hash = str(instance.game_hash)
+    if not game_hash:
+        return
+    async_to_sync(get_channel_layer().group_send)(
+        game_hash,
+        {"type": "game.delete"}
+    )
+
 
 def index(request):
     return render(request, 'index.html')
@@ -42,6 +70,7 @@ def delete_player(request, player_id, game_hash):
             game = Game.objects.get(game_hash=game_hash)
             player = Player.objects.get(id=player_id, player_game=game)
             player.delete()
+            game.save()
         except Player.DoesNotExist:
             return ""
         except Game.DoesNotExist:
@@ -56,10 +85,10 @@ def increase_lvl(request, player_id, game_hash):
         try:
             game = Game.objects.get(game_hash=game_hash)
             player = Player.objects.get(id=player_id, player_game=game)
-            update_fields = ['player_lvl']
             if player.player_lvl < 10:
                 player.player_lvl += 1
-                player.save(update_fields=update_fields)
+                player.save()
+                game.save()
         except Player.DoesNotExist:
             return ""
         except Game.DoesNotExist:
@@ -74,10 +103,10 @@ def decrease_lvl(request, player_id, game_hash):
         try:
             game = Game.objects.get(game_hash=game_hash)
             player = Player.objects.get(id=player_id, player_game=game)
-            update_fields = ['player_lvl']
             if player.player_lvl > 1:
                 player.player_lvl -= 1
-                player.save(update_fields=update_fields)
+                player.save()
+                game.save()
         except Player.DoesNotExist:
             return ""
         except Game.DoesNotExist:
@@ -92,9 +121,9 @@ def increase_equipment(request, player_id, game_hash):
         try:
             game = Game.objects.get(game_hash=game_hash)
             player = Player.objects.get(id=player_id, player_game=game)
-            update_fields = ['player_equipment']
             player.player_equipment += 1
-            player.save(update_fields=update_fields)
+            player.save()
+            game.save()
         except Player.DoesNotExist:
             return ""
         except Game.DoesNotExist:
@@ -109,10 +138,10 @@ def decrease_equipment(request, player_id, game_hash):
         try:
             game = Game.objects.get(game_hash=game_hash)
             player = Player.objects.get(id=player_id, player_game=game)
-            update_fields = ['player_equipment']
             if player.player_equipment > 0:
                 player.player_equipment -= 1
-                player.save(update_fields=update_fields)
+                player.save()
+                game.save()
         except Player.DoesNotExist:
             return ""
         except Game.DoesNotExist:
@@ -127,13 +156,13 @@ def switch_gender(request, player_id, game_hash):
         try:
             game = Game.objects.get(game_hash=game_hash)
             player = Player.objects.get(id=player_id, player_game=game)
-            update_fields = ['player_gender']
             gender = player.player_gender
             if gender == 'F':
                 player.player_gender = 'M'
             elif gender == 'M':
                 player.player_gender = 'F'
-            player.save(update_fields=update_fields)
+            player.save()
+            game.save()
         except Player.DoesNotExist:
             return ""
         except Game.DoesNotExist:
@@ -179,4 +208,5 @@ def add_player(request, game_hash):
             player = Player.objects.create(
                 player_name=form.cleaned_data['player_name'], player_gender=form.cleaned_data['player_gender'], player_game=game)
             player.save()
+            game.save()
         return redirect('game:load_players', game_hash=game_hash)

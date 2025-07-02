@@ -1,4 +1,36 @@
 {% extends "base.html" %}
+{% block script %}
+<script>
+function startWebsocket() {
+
+  const game_hash = '{{game_hash}}'
+  var ws = new WebSocket(`ws://localhost:8000/ws/game/${game_hash}/`);
+
+  ws.onmessage = function(event) {
+      const data = JSON.parse(event.data)['type'];
+      console.log(data)
+      if (data == 'game.update'){
+          console.log('svo')
+          htmx.trigger('#plr_container','player_update')
+      } else if (data == 'game.delete'){
+        htmx.trigger('#ind_loader','game_delete')
+      }
+
+  };
+
+  ws.onopen = function() {
+      console.log("WebSocket подключен");
+
+
+  };
+  ws.onclose = function(){
+    ws = null
+    setTimeout(startWebsocket, 5000)
+  }
+}
+startWebsocket()
+</script>
+{% endblock script %}
 {% block title %}Munchkin level counter{% endblock title %}
 {% block header %}Munchkin Игра: {{game_hash}}{% endblock header %}
 {% block content %}
@@ -26,7 +58,7 @@
 Закончить игру
 </button>
 </div>
-<div class="players-container" hx-trigger="every 100s" hx-get="{%url 'game:load_players' game_hash%}" hx-swap="outerHTML" id="plr_container">
+<div class="players-container" hx-trigger="player_update" hx-get="{%url 'game:load_players' game_hash%}" hx-swap="outerHTML" id="plr_container">
   {% for player in players %}
 <div class="player-card" id = "plr{{player.id}}">
    <div class="player-header">
@@ -77,4 +109,5 @@
   
   <button type="reset" class="add-player-btn" id="submit_add">Добавить игрока</button>
 </form>
+<div  id="ind_loader" hx-get="{%url 'game:index'%}" hx-trigger="game_delete" hx-swap="outerHTML" hx-target="body"></div>
 {% endblock %}
