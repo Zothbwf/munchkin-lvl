@@ -22,4 +22,6 @@ urlpatterns = [
          views.switch_gender, name="switch_gender"),
     path('remove_game/<game_hash>/',
          views.remove_game, name="remove_game"),
+    path('load_players/<game_hash>/', views.load_players, name='load_players'),
+    path('add_player/<game_hash>/', views.add_player, name='add_player')
 ]

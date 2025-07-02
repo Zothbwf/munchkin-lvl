@@ -5,6 +5,8 @@ import datetime
 
 class Game(models.Model):
     game_hash = models.CharField(max_length=6)
+    creation_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'Game code = {self.game_hash}'
@@ -20,7 +22,8 @@ class Player(models.Model):
     player_equipment = models.IntegerField(default=0)
     player_game = models.ForeignKey(Game, on_delete=models.CASCADE)
     player_hash = models.CharField(max_length=20)
-    creation_time = models.DateTimeField(auto_now=True)
+    creation_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
     player_gender = models.CharField(
         max_length=1, choices=GENDER_CHOICES, default='M')
 
