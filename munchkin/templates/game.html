@@ -13,7 +13,7 @@ function startWebsocket() {
           console.log('svo')
           htmx.trigger('#plr_container','player_update')
       } else if (data == 'game.delete'){
-        htmx.trigger('#ind_loader','game_delete')
+        location.replace('{%url "game:index"%}'+'?game_removed=True')
       }
 
   };
@@ -37,10 +37,6 @@ startWebsocket()
 <div class="end-game-container">
     <button 
     class="end-game-btn"
-    hx-post="{% url "game:remove_game" game_hash=game_hash %}" 
-        hx-trigger='confirmed'
-        hx-target='body'
-        hx-swap="outerHTML"
         onClick="Swal.fire({
   title: 'Вы уверены?',
   text: 'Игру не получиться восстановить!',
@@ -52,7 +48,9 @@ startWebsocket()
   confirmButtonText: 'Да, закончить'
 }).then((result) =>{
             if(result.isConfirmed){
-              htmx.trigger(this, 'confirmed');  
+              const url = '{%url "game:index"%}';
+              htmx.trigger('#game_remover','remove_game')
+              location.replace(url+'?game_removed=True')
             } 
         })">
 Закончить игру
@@ -109,5 +107,5 @@ startWebsocket()
   
   <button type="reset" class="add-player-btn" id="submit_add">Добавить игрока</button>
 </form>
-<div  id="ind_loader" hx-get="{%url 'game:index'%}" hx-trigger="game_delete" hx-swap="outerHTML" hx-target="body"></div>
+<div display=None hx-post="{%url 'game:remove_game' game_hash=game_hash%}" hx-trigger='remove_game' id='game_remover'>
 {% endblock %}

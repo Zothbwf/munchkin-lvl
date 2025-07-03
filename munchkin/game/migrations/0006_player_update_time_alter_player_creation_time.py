@@ -7,19 +7,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('game', '0005_player_player_gender'),
+        ("game", "0005_player_player_gender"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='player',
-            name='update_time',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="player",
+            name="update_time",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='player',
-            name='creation_time',
+            model_name="player",
+            name="creation_time",
             field=models.DateTimeField(auto_now_add=True),
         ),
     ]

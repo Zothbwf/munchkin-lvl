@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('game', '0004_remove_player_player_is_male'),
+        ("game", "0004_remove_player_player_is_male"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='player',
-            name='player_gender',
-            field=models.CharField(choices=[('M', 'Мужской'), ('F', 'Женский')], default='M', max_length=1),
+            model_name="player",
+            name="player_gender",
+            field=models.CharField(
+                choices=[("M", "Мужской"), ("F", "Женский")], default="M", max_length=1
+            ),
         ),
     ]

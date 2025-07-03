@@ -1,15 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Munchkin level counter{% endblock title %}
 {% block header %}Munchkin{% endblock header %}
+{% block script %}
+<script>
+const param = new URLSearchParams(window.location.search);
+const removed = param.get('game_removed')
+if (removed){
+Swal.fire({
+  title: 'Игра была закончена',
+  icon: 'success',
+  confirmButtonColor: '#3085d6',
+  confirmButtonText: 'Ок'
+})}
+</script>
+{% endblock script %}
 {% block content %}
 
 <div class="form-container">
-    <form hx-get="{% url 'game:create_game'%}" hx-target="body" hx-swap="outerHTML" class="action-form single-button">
+    <form action="{% url 'game:create_game'%}" method="get" class="action-form single-button">
         {% csrf_token %}          
         <button type="submit" class="action-btb button-style">Создать игру</button>
     </form>
 
-    <form hx-get="{% url 'game:join_game_0'%}" hx-target="body" hx-swap="outerHTML" class="action-form">
+    <form action="{% url 'game:join_game_0'%}" method="get" class="action-form">
         {% csrf_token %}
         <input name="game_hash" placeholder="Введите код игры">
         <button type="submit" class="action-btb button-style">Зайти в игру</button>
