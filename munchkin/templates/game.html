@@ -5,7 +5,7 @@ function startWebsocket() {
 
   const game_hash = '{{game_hash}}'
   const host = window.location.host
-  var ws = new WebSocket(`ws://${host}/ws/game/${game_hash}/`);
+  var ws = new WebSocket(`wss://${host}/ws/game/${game_hash}/`);
 
   ws.onmessage = function(event) {
       const data = JSON.parse(event.data)['type'];
