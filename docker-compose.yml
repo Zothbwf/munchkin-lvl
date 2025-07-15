@@ -21,7 +21,6 @@ services:
     ports:
       - "5432:5432"
   munchkin:
-    build: .
     image: zothbwf/munchkin:latest
     container_name: munchkin
     command: ["daphne", "munchkin.asgi:application", "-b", "0.0.0.0","-p","8000"]
