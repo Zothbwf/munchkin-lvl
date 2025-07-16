@@ -12,7 +12,7 @@ from .models import Game, Player
 
 
 @receiver(post_save, sender=Game)
-def game_receiver(sender, instance, created, **kwargs):
+def game_update_receiver(sender, instance, created, **kwargs):
     game_hash = str(instance.game_hash)
     if not game_hash:
         return
@@ -20,7 +20,7 @@ def game_receiver(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=Game)
-def game_receiver(sender, instance, **kwargs):
+def game_delete_receiver(sender, instance, **kwargs):
     game_hash = str(instance.game_hash)
     if not game_hash:
         return
